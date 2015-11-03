@@ -2,17 +2,20 @@ angular.module('currencyMask', []).directive('currencyMask', function () {
   return {
     restrict: 'A',
     require: 'ngModel',
+    scope:{ decimallimit:'=' },
     link: function (scope, element, attrs, ngModelController) {
       // Run formatting on keyup
       var numberWithCommas = function(value, addExtraZero) {
+        if (scope.decimallimit == undefined)
+						{scope.decimallimit = 2;}
         if (addExtraZero == undefined)
-          addExtraZero = false
+          {addExtraZero = false;}
         value = value.toString();
         value = value.replace(/[^0-9\.]/g, "");
         var parts = value.split('.');
         parts[0] = parts[0].replace(/\d{1,3}(?=(\d{3})+(?!\d))/g, "$&,");
-        if (parts[1] && parts[1].length > 2) {
-          parts[1] = parts[1].substring(0, 2);
+        if (parts[1] && parts[1].length > scope.decimallimit) {
+          parts[1] = parts[1].substring(0, scope.decimallimit);
         }
         if (addExtraZero && parts[1] && (parts[1].length === 1)) {
           parts[1] = parts[1] + "0" 
